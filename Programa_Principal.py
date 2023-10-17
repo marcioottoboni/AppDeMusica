@@ -1,29 +1,29 @@
-import Classses as  CL
+import Classes as CL
 import tkinter as tk
 
 # Função chamada quando o botão "OK" é clicado
 def mostrar_informacoes():
-    cantores = entry_cantores.get().split(',')
-    estilos = entry_estilos.get().split()
+    cantores = entry_cantores.get()
+    estilos = entry_estilos.get()
     
     if sl_top10.get() == 1:
-        CL.BaixadorMusicas(cantores, estilos).Top_10_Musicas()
+        teste = CL.Spotify(cantores, estilos).Top_10_Musicas()
     if sl_dico.get() == 1:
-        CL.BaixadorMusicas(cantores, estilos).Todas_Discografia()
+        CL.Spotify(cantores, estilos).Todas_Discografia()
     if sl_parecidos.get() == 1:
-        CL.BaixadorMusicas(cantores, estilos).Top_10_Parecidos()
-        
+       var_parecidos =  CL.Spotify(cantores, estilos).Top_20_Parecidos()
+       print(var_parecidos)
     if sl_parecidos.get() != 1 and sl_dico.get() != 1 and sl_top10.get() != 1:
        print(f'Selecione alguma opcao!') 
     
 # Configuração da janela
 root = tk.Tk()
 root.title("Download De Musicas")
-largura, altura, posicaoX,posicaoY  = 380,170,300,300
+largura, altura, posicaoX,posicaoY  = 460,160,900,900
 root.geometry(f"{largura}x{altura}+{posicaoX}+{posicaoY}")
 
 # Título para Cantores
-label_cantores = tk.Label(root, text="       Cantor(s) separados por vírgula:")
+label_cantores = tk.Label(root, text="  Cantor:")
 label_cantores.grid(row=0, column=0, columnspan=2)
 entry_cantores = tk.Entry(root)
 entry_cantores.grid(row=0, column=2, columnspan=2)
@@ -33,7 +33,7 @@ label_separador_0 = tk.Label(root, text="")
 label_separador_0.grid(row=1, column=0, columnspan=2)
 
 # Título para Estilos
-label_estilos = tk.Label(root, text="Estilo(s) separado por vírgula:")
+label_estilos = tk.Label(root, text="Estilo:")
 label_estilos.grid(row=2, column=0, columnspan=2)
 entry_estilos = tk.Entry(root)
 entry_estilos.grid(row=2, column=2, columnspan=2)
@@ -43,7 +43,7 @@ sl_top10,sl_dico, sl_parecidos = tk.IntVar(),tk.IntVar(),tk.IntVar()
 
 ck_top10 = tk.Checkbutton(root, text="Top 10 músicas", variable=sl_top10)
 ck_disco = tk.Checkbutton(root, text="Toda a discografia", variable=sl_dico)
-ck_parecidos = tk.Checkbutton(root, text="Top 10 parecidos", variable=sl_parecidos)
+ck_parecidos = tk.Checkbutton(root, text="Top 20 parecidos", variable=sl_parecidos)
 
 ck_top10.grid(row=3, column=0)
 ck_disco.grid(row=3, column=1)
