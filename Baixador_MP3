@@ -1,0 +1,53 @@
+from pytube import YouTube
+from youtubesearchpython import VideosSearch
+import requests
+import subprocess
+import os
+from moviepy.editor import VideoFileClip
+
+nome_cantor = 'Metallica'
+nome_musica =  'ghj'
+local_salvamento = '/home/marcio/Downloads/'
+
+pesquisa = f"{nome_cantor} {nome_musica}"
+search = VideosSearch(pesquisa, limit = 1)
+url = "https://www.youtube.com/watch?v=" + search.result()['result'][0]['id']
+yt = YouTube(url)
+
+try:
+    yt = YouTube(url)
+    video = yt.streams.get_highest_resolution()
+    
+    # Verifica se a pasta do cantor existe se nao  existe cria
+    output_folder = f"{local_salvamento}{nome_cantor}"
+    if not os.path.exists(local_salvamento):
+        print("Pasta Raiz nao encontrada")
+    else:
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+    video.download(output_folder)
+    print("Download concluído!")  
+except Exception as e:
+    print("Ocorreu um erro durante o download:", str(e))
+
+for root, dirs, files in os.walk(local_salvamento):
+    for file in files:
+        if file.endswith(".mp4"):
+            video_path = os.path.join(root, file)
+            mp3_output_path = os.path.join(output_folder, file.replace(".mp4", ".mp3"))
+            video_clip = VideoFileClip(video_path)
+            audio_clip = video_clip.audio
+            audio_clip.write_audiofile(mp3_output_path)
+            audio_clip.close()
+            # Deleta os arquivos .mp4
+            if os.path.exists(output_folder):
+                # Listar todos os arquivos na pasta
+                arquivos = os.listdir(output_folder)
+                for arquivo in arquivos:
+                    if arquivo.endswith('.mp4'):
+                        caminho_arquivo = os.path.join(output_folder, arquivo)
+                        os.remove(caminho_arquivo)
+                        print(f'Arquivo {arquivo} foi excluído.')
+            else:
+                print(f'A pasta {output_folder} não existe.')
+
